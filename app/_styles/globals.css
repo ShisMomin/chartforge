@@ -1,0 +1,164 @@
+@import 'tailwindcss';
+
+/* [data-theme='light'] */
+:root {
+    /* Primary */
+    --primary-50: 225 232 239;
+    --primary-100: 212 222 231;
+    --primary-200: 183 199 215;
+    --primary-300: 153 176 199;
+    --primary-400: 124 153 182;
+    --primary-500: 94 130 166;
+    --primary-600: 76 107 138;
+    --primary-700: 60 84 108;
+    --primary-800: 44 61 79;
+    --primary-900: 27 38 49;
+    --primary-950: 20 28 36;
+
+    /* Accent */
+    --accent-50: 250 245 240;
+    --accent-100: 244 236 225;
+    --accent-200: 232 214 191;
+    --accent-300: 221 194 162;
+    --accent-400: 210 175 132;
+    --accent-500: 198 153 99;
+    --accent-600: 183 131 67;
+    --accent-700: 146 104 53;
+    --accent-800: 108 77 40;
+    --accent-900: 75 53 27;
+    --accent-950: 56 40 20;
+
+    --up: 34 197 94;
+    --down: 239 68 68;
+
+    --panel: 245 245 245;
+    --card: 235 235 235;
+    --panel-border: 220 220 220;
+
+    --active: 231 229 228;
+    --backdrop: 231 229 228;
+    --dropdown-background: 220 220 220;
+    --search-background: 42 46 57;
+    --active-border: 99 102 241;
+    --btnbg: 235 235 235;
+}
+
+.light {
+    --background: 255 255 255;
+    --foreground: 23 23 23;
+
+    --primary: var(--primary-600);
+    --primary-foreground: 255 255 255;
+
+    --accent: var(--accent-500);
+    --accent-foreground: 255 255 255;
+
+    --surface: 245 245 245;
+    --surface-border: 220 220 220;
+
+    --hover: 231 229 228;
+    --active: 165 243 252;
+    --backdrop: 225 225 225;
+    --backdropAlpha: 0.3;
+    --dropdown-background: 255 255 255;
+    --search-background: 232 233 235;
+    --active-border: 99 102 241;
+}
+
+.dark {
+    --background: 10 10 10;
+    --foreground: 237 237 237;
+
+    --primary: var(--primary-400);
+    --primary-foreground: 10 10 10;
+
+    --accent: var(--accent-400);
+    --accent-foreground: 10 10 10;
+
+    --surface: 18 18 18;
+    --surface-border: 40 40 40;
+
+    --up: 74 222 128;
+    --down: 248 113 113;
+
+    /* --panel: 18 18 18; */
+    --card: 45 45 45;
+    --panel: 40 40 40;
+    /* --panel-border: 55 55 55; */
+    /* --panel-border: 255 255 255 / 0.08; */
+    --panel-border: 255 255 255/0.15;
+
+    --hover: 68 64 60;
+    --active: 59 50 100;
+    --backdrop: 0 0 0;
+    --backdropAlpha: 0.5;
+    /* --dropdown-background: 40 40 40; */
+    --dropdown-background: 30, 34, 45;
+    --search-background: 42 46 57;
+    --btnbg: 45 45 45 /* --active-border: 99 102 241; */;
+}
+
+@theme {
+    --color-background: rgb(var(--background));
+    --color-foreground: rgb(var(--foreground));
+
+    --color-surface: rgb(var(--surface));
+    --color-surface-border: rgb(var(--surface-border));
+
+    --color-primary: rgb(var(--primary));
+    --color-primary-foreground: rgb(var(--primary-foreground));
+
+    --color-accent: rgb(var(--accent));
+    --color-accent-foreground: rgb(var(--accent-foreground));
+
+    --color-up: rgb(var(--up));
+    --color-down: rgb(var(--down));
+
+    --color-panel: rgb(var(--panel));
+    --color-panel-border: rgb(var(--panel-border));
+
+    --color-primary-50: rgb(var(--primary-50));
+    --color-primary-100: rgb(var(--primary-100));
+    --color-primary-200: rgb(var(--primary-200));
+    --color-primary-300: rgb(var(--primary-300));
+    --color-primary-400: rgb(var(--primary-400));
+    --color-primary-500: rgb(var(--primary-500));
+    --color-primary-600: rgb(var(--primary-600));
+    --color-primary-700: rgb(var(--primary-700));
+    --color-primary-800: rgb(var(--primary-800));
+    --color-primary-900: rgb(var(--primary-900));
+    --color-primary-950: rgb(var(--primary-950));
+
+    /* Accent scale */
+    --color-accent-50: rgb(var(--accent-50));
+    --color-accent-100: rgb(var(--accent-100));
+    --color-accent-200: rgb(var(--accent-200));
+    --color-accent-300: rgb(var(--accent-300));
+    --color-accent-400: rgb(var(--accent-400));
+    --color-accent-500: rgb(var(--accent-500));
+    --color-accent-600: rgb(var(--accent-600));
+    --color-accent-700: rgb(var(--accent-700));
+    --color-accent-800: rgb(var(--accent-800));
+    --color-accent-900: rgb(var(--accent-900));
+    --color-accent-950: rgb(var(--accent-950));
+
+    --color-hover: rgb(var(--hover));
+    --color-active: rgb(var(--active));
+    --color-backdrop: rgb(var(--backdrop)/var(--backdropAlpha));
+    --color-dropdown-background: rgb(var(--dropdown-background));
+    --color-search: rgb(var(--search-background));
+    --color-active-border: rgb(var(--active-border));
+    --color-card: rgb(var(--card));
+    --color-btnbg: rgb(var(--btnbg));
+    --breakpoint-md2: 800px;
+    --breakpoint-md3: 1100px;
+}
+
+body {
+    background: rgb(var(--background));
+    color: rgb(var(--foreground));
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
