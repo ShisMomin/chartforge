@@ -5,17 +5,21 @@ import ThemeSwitch from './ModeToggle';
 import { UserButton, useUser } from '@clerk/nextjs';
 import SearchSymbol from './SearchSymbol';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { usePathname } from 'next/navigation';
+import AppLogo from './AppLogo';
 
 const navLinks = [
-    { name: 'Dashboard', href: '/' },
+    { name: 'Home', href: '/' },
     { name: 'Markets', href: '/markets' },
-    { name: 'Chart Terminal', href: '/terminal' },
+    { name: 'Terminal', href: '/terminal' },
     { name: 'Watchlist', href: '/watchlist' },
 ];
 
-const navLinkClass =
-    'relative text-base font-medium text-muted-foreground transition-colors duration-200  after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full';
-
+// const navLinkClass =
+//     'relative text-base font-medium text-muted-foreground transition-colors duration-200  after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full';
+function getLinkClass(active: boolean) {
+    return `relative text-base font-medium text-muted-foreground transition-colors duration-200  after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-blue-600 after:transition-all after:duration-300 ${active ? 'after:w-full' : 'hover:after:w-full'}`;
+}
 const avatarAppearance = {
     elements: {
         avatarBox: {
@@ -27,37 +31,27 @@ const avatarAppearance = {
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    // const [searchOpen, setSearchOpen] = useState(false);
     const { user, isSignedIn, isLoaded } = useUser();
-
+    const pathName = usePathname();
     return (
         <nav className="relative flex items-center justify-between h-14 md:h-16 w-full px-6 border-b border-border bg-panel z-50">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-                {/* Icon */}
-                <div className="relative flex items-end gap-0.5 h-6">
-                    <span className="w-0.75 h-4 bg-emerald-500 rounded-sm"></span>
-                    <span className="w-0.75 h-6 bg-red-500 rounded-sm"></span>
-                    <span className="w-0.75 h-5 bg-emerald-500 rounded-sm"></span>
-
-                    {/* forge glow */}
-                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary blur-md opacity-60 group-hover:opacity-100 transition"></div>
-                </div>
-
-                {/* Text */}
-                <span className="text-2xl md:text-3xl font-bold tracking-tight">
-                    Chart<span className="text-primary">Forge</span>
-                </span>
-            </Link>
+            <AppLogo />
             {/* Desktop Nav */}
             <ul className="hidden xl:flex items-center gap-8">
-                {navLinks.map((link) => (
-                    <li key={link.name}>
-                        <Link href={link.href} className={navLinkClass}>
-                            {link.name}
-                        </Link>
-                    </li>
-                ))}
+                {navLinks.map((link) => {
+                    const isActive = pathName === link.href;
+                    return (
+                        <li key={link.name}>
+                            <Link
+                                href={link.href}
+                                className={getLinkClass(isActive)}
+                            >
+                                {link.name}
+                            </Link>
+                        </li>
+                    );
+                })}
             </ul>
 
             {/* Right Section Desktop */}
@@ -148,11 +142,11 @@ export default function Navbar() {
 
             {/* Mobile Drawer */}
             <div
-                className={`fixed top-0 right-0 h-screen w-72 bg-panel border-l border-border transform transition-transform duration-300 xl:hidden z-50 ${
+                className={`fixed top-0 right-0 h-screen w-72 bg-panel border-l border-border transform transition-transform duration-300 xl:hidden ${
                     isOpen ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
-                <ul className="flex flex-col gap-6 p-8">
+                <ul className="flex flex-col gap-6 px-8 py-15">
                     {isSignedIn && (
                         <li className="flex flex-col gap-4">
                             <div className="flex items-center gap-2">
@@ -165,18 +159,22 @@ export default function Navbar() {
                         </li>
                     )}
 
-                    {navLinks.map((link) => (
-                        <li key={link.name}>
-                            <Link
-                                href={link.href}
-                                onClick={() => setIsOpen(false)}
-                                // className="text-base font-medium text-foreground"
-                                className={navLinkClass}
-                            >
-                                {link.name}
-                            </Link>
-                        </li>
-                    ))}
+                    {navLinks.map((link) => {
+                        const isActive = pathName === link.href;
+                        return (
+                            <li key={link.name}>
+                                <Link
+                                    href={link.href}
+                                    onClick={() => setIsOpen(false)}
+                                    // className="text-base font-medium text-foreground"
+                                    // className={navLinkClass}
+                                    className={getLinkClass(isActive)}
+                                >
+                                    {link.name}
+                                </Link>
+                            </li>
+                        );
+                    })}
 
                     {!isSignedIn && isLoaded && (
                         <li className="flex flex-col gap-3 mt-6">

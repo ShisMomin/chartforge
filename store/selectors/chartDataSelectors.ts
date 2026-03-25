@@ -17,15 +17,6 @@ export const selectSyncSymbolAndIndicator = (state: RootState) => {
         syncSymbol: state.syncSymbol,
     };
 };
-// export const selectActiveChartIndicatorIds = (state: RootState) => {
-//     const id = state.activeChartId;
-//     if (!id) return [];
-//     return state.chartsById[id]?.indicators ?? [];
-// };
-// export const selectLastUpdateByChartId =
-//     (chartId: string) => (state: RootState) => {
-//         return state.chartsById[chartId]?.lastUpdate;
-//     };
 export const selectLastUpdateByChartId =
     (chartId: string) => (state: RootState) => {
         return state.chartsById[chartId]?.firstHistoryTime;

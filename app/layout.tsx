@@ -1,20 +1,16 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import '@/app/_styles/globals.css';
 import ThemeProvider from '@/shared/providers/theme-provider';
 import { ClerkProvider } from '@clerk/nextjs';
 import TanstackProvider from '@/shared/providers/tanstack-provider';
 export const metadata: Metadata = {
     title: {
-        template: '%s The Charting View',
-        default: 'Welcome / The Charting View',
+        // template: '%s The ChartForge',
+        template: '%s • ChartForge',
+        default: 'ChartForge',
+        // default: 'Welcome / The ChartForge',
     },
 };
-
-// const inter = Inter({
-//     subsets: ['latin'],
-//     weight: ['400', '600', '800', '900'], // 👈 include extrabold & black
-// });
 
 export default function RootLayout({
     children,
@@ -23,7 +19,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className={`h-screen w-screen overflow-hidden `}>
+            <body className={`h-dvh w-screen overflow-y-scroll `}>
                 <ClerkProvider>
                     <TanstackProvider>
                         <ThemeProvider>{children}</ThemeProvider>
@@ -33,18 +29,3 @@ export default function RootLayout({
         </html>
     );
 }
-
-// myCode
-// export default function RootLayout({
-//     children,
-// }: Readonly<{
-//     children: React.ReactNode;
-// }>) {
-//     return (
-//         <html lang="en" suppressHydrationWarning>
-//             <body className="min-h-screen flex flex-col">
-//                 <ThemeProvider>{children}</ThemeProvider>
-//             </body>
-//         </html>
-//     );
-// }

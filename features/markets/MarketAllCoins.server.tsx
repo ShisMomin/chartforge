@@ -13,7 +13,7 @@ async function getAllCoins24hStatus() {
         );
 
         const allCoinsData = await res.json();
-        console.log(allCoinsData);
+        // console.log(allCoinsData);
         return allCoinsData;
     } catch (error) {
         // Return mock data on error

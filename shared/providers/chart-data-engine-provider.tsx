@@ -7,7 +7,6 @@ import {
     useEffect,
     useRef,
 } from 'react';
-import { IChartApi } from 'lightweight-charts';
 import { AppConfig } from '@/app-config';
 import { useStore } from '@/store/store';
 import { selectChartDataByChartId } from '@/store/selectors/chartDataSelectors';
@@ -20,8 +19,6 @@ import {
     fetchCandlestickData,
 } from '@/lib/binance/marketData';
 type ChartEngineContextValue = {
-    chartRef: React.MutableRefObject<IChartApi | null>;
-    initChartInstance: (instance: IChartApi) => void;
     fetchMoreData: () => void;
     chartId: string;
 };
@@ -59,7 +56,6 @@ function formatKline(
 }
 
 export default function ChartDataEngineProvider({ children, chartId }: Props) {
-    const chartRef = useRef<IChartApi | null>(null);
     const {
         setInitLoadingByChartId,
         setPrevLoadingByChartId,
@@ -72,15 +68,10 @@ export default function ChartDataEngineProvider({ children, chartId }: Props) {
         updateLiveIndicatorByChartAndIndicatorId,
         updateLiveCandleByChartId,
         updateLiveTempCandlesByChartId,
-        // addIndicatorByChartAndIndicatorId,
     } = useStore();
-    // const { setActiveChartSymbol } = useStore();
     const chartData = useStore(selectChartDataByChartId(chartId));
     const chartIndicators = useStore(selectChartIndicatorByChartId(chartId));
     const { socket } = useBinanceSocket();
-    // const searchParams = useSearchParams();
-    // const searchParamSymbol = searchParams.get('symbol');
-    // console.log('chartData', chartData);
     const { symbol, timeframe, firstHistoryTime } = chartData;
     const firstHistoryRef = useRef<number | null>(firstHistoryTime);
     const symbolRef = useRef(symbol);
@@ -99,11 +90,6 @@ export default function ChartDataEngineProvider({ children, chartId }: Props) {
     useEffect(() => {
         chartIndicatorsRef.current = chartIndicators;
     }, [chartIndicators]);
-    // useEffect(() => {
-    //     if (!searchParamSymbol) return;
-    //     // console.log(searchParamSymbol);
-    //     setActiveChartSymbol(searchParamSymbol);
-    // }, [searchParamSymbol, setActiveChartSymbol]);
     const setAllIndicators = useCallback(
         function (cacheCandles: CandleType[], candles: CandleType[]) {
             const allindicators = chartIndicatorsRef.current;
@@ -117,7 +103,6 @@ export default function ChartDataEngineProvider({ children, chartId }: Props) {
             });
         },
         [chartId, setIndicatorByChartAndIndicatorId],
-        // [chartId],
     );
     const updateAllIndicatorsHistory = useCallback(
         function (cacheCandles: CandleType[], candles: CandleType[]) {
@@ -146,22 +131,12 @@ export default function ChartDataEngineProvider({ children, chartId }: Props) {
         },
         [chartId, updateLiveIndicatorByChartAndIndicatorId],
     );
-    const initChartInstance = useCallback((instance: IChartApi) => {
-        chartRef.current = instance;
-    }, []);
     useEffect(
         function () {
             const controller = new AbortController();
             async function loadData() {
                 try {
-                    if (
-                        !symbolRef.current ||
-                        !timeframeRef.current
-                        // ||
-                        // (searchParamSymbol &&
-                        //     searchParamSymbol !== symbolRef.current)
-                    )
-                        return;
+                    if (!symbolRef.current || !timeframeRef.current) return;
                     setInitLoadingByChartId(chartId, true);
                     let data: CandlestickDataResponse | null = null;
                     if (!AppConfig.isAggInterval(timeframeRef.current)) {
@@ -200,7 +175,6 @@ export default function ChartDataEngineProvider({ children, chartId }: Props) {
             setCacheCandlesByChartId,
             setTempCandlesByChartId,
             setAllIndicators,
-            // searchParamSymbol,
         ],
     );
 
@@ -302,7 +276,6 @@ export default function ChartDataEngineProvider({ children, chartId }: Props) {
                 updateAllIndicatorsHistory(data.cacheData, data.finalData);
                 updateHistoryByChartId(chartId, data.finalData);
                 setCacheCandlesByChartId(chartId, data.cacheData);
-                // await sleep(2000);
             } catch (error) {
                 if (error instanceof Error) {
                     console.log(error.message);
@@ -323,9 +296,7 @@ export default function ChartDataEngineProvider({ children, chartId }: Props) {
     return (
         <ChartDataEngineContext.Provider
             value={{
-                chartRef,
                 chartId,
-                initChartInstance,
                 fetchMoreData,
             }}
         >
@@ -344,61 +315,3 @@ function useChartDataEngine() {
 }
 
 export { ChartDataEngineProvider, useChartDataEngine };
-
-// useEffect(
-//     function () {
-//         async function loadData() {
-//             try {
-//                 if (
-//                     !symbolRef.current ||
-//                     !timeframeRef.current
-//                     // ||
-//                     // (searchParamSymbol &&
-//                     //     searchParamSymbol !== symbolRef.current)
-//                 )
-//                     return;
-//                 // console.log(symbolRef.current);
-//                 setInitLoadingByChartId(chartId, true);
-//                 let data: CandlestickDataResponse | null = null;
-//                 if (!AppConfig.isAggInterval(timeframeRef.current)) {
-//                     data = await fetchCandlestickData({
-//                         symbol: symbolRef.current,
-//                         interval: timeframeRef.current,
-//                     });
-//                 } else {
-//                     data = await fetchAggCandlestickData({
-//                         symbol: symbolRef.current,
-//                         interval: timeframeRef.current,
-//                     });
-//                 }
-//                 if (!data) return;
-//                 setAllIndicators(data.cacheData, data.finalData);
-//                 setInitCandlesByChartId(chartId, data.finalData);
-//                 setTempCandlesByChartId(chartId, data.tempData);
-//                 setCacheCandlesByChartId(chartId, data.cacheData);
-//             } catch (error) {
-//                 if (error instanceof Error) {
-//                     throw new Error(
-//                         `Failed to load data: ${error.message}`,
-//                     );
-//                 } else {
-//                     throw new Error('Failed to load data: unknown error');
-//                 }
-//             } finally {
-//                 setInitLoadingByChartId(chartId, false);
-//             }
-//         }
-//         loadData();
-//     },
-//     [
-//         chartId,
-//         symbol,
-//         timeframe,
-//         setInitLoadingByChartId,
-//         setInitCandlesByChartId,
-//         setCacheCandlesByChartId,
-//         setTempCandlesByChartId,
-//         setAllIndicators,
-//         // searchParamSymbol,
-//     ],
-// );

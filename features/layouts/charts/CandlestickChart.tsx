@@ -12,7 +12,7 @@ import {
 } from '@/store/selectors/chartDataSelectors';
 
 export default function CandlestickChart() {
-    const { chartId, initChartInstance } = useChartDataEngine();
+    const { chartId } = useChartDataEngine();
     const chartData = useStore(selectChartDataByChartId(chartId));
     const paneData = useStore(selectPaneByChartId(chartId));
     const { setActiveChartId } = useStore();
@@ -26,7 +26,8 @@ export default function CandlestickChart() {
                 setActiveChartId(chartId === activeChartId ? null : chartId)
             }
         >
-            <CustomChart initChartInstance={initChartInstance}>
+            {/* <CustomChart initChartInstance={initChartInstance}> */}
+            <CustomChart>
                 {paneData.map((pData) => {
                     if (pData.paneId === 'main') {
                         return (

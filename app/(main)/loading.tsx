@@ -1,9 +1,3 @@
-import Spinner from '@/shared/components/ui/Spinner';
-
-// export default function LoadingMarketTable() {
-//     return <Spinner />;
-// }
-
 export default function MarketStatsSkeleton() {
     return (
         // <main className="h-[calc(100vh-64px)] overflow-y-auto px-5 py-4">

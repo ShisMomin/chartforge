@@ -2,7 +2,7 @@ import {
     Pane,
     PaneApiRef,
 } from '@shismomin/lightweight-charts-react-components';
-import { PaneLegend } from 'lwc-plugin-pracplugin';
+import { PaneLegend } from '@shismomin/lwc-plugin-pracplugin';
 import { ReactNode, useEffect, useRef } from 'react';
 
 type CustomPaneProps = {

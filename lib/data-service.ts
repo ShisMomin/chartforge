@@ -29,7 +29,8 @@ export async function getAllLayout(): Promise<ChartGrid[]> {
     try {
         const { data, error } = await supabaseAdmin
             .from('chart_layouts')
-            .select('id,numRows, numCols');
+            .select('id,numRows, numCols')
+            .order('id', { ascending: true });
 
         if (error || !data) {
             console.error('Supabase error:', error);

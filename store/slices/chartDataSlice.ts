@@ -1,5 +1,4 @@
 import { type ChartConfig, type ChartLayout } from '@/schemas';
-// import { type CandlestickData } from 'lightweight-charts';
 import { type StateCreator } from 'zustand';
 import { type RootState } from '@/store/types';
 import { convertTimeframeLive } from '@/lib/aggregation';
@@ -56,9 +55,9 @@ export const creatChartDataSlice: StateCreator<
     syncIndicator: false,
     syncSymbol: false,
     setInitChartData: (charts, sym = '') => {
-        set((state) => {
-            state.activeChartId = charts[0].chartId;
-            state.chartsById = charts.reduce<Record<string, FullChartInfo>>(
+        set((draft) => {
+            draft.activeChartId = charts[0].chartId;
+            draft.chartsById = charts.reduce<Record<string, FullChartInfo>>(
                 (acc, chart) => {
                     acc[chart.chartId] = {
                         ...chart,
@@ -78,22 +77,22 @@ export const creatChartDataSlice: StateCreator<
         });
     },
     clearInitChartData: () => {
-        set((state) => {
-            state.chartsById = {};
+        set((draft) => {
+            draft.chartsById = {};
         });
     },
     setActiveChartId: (id) => {
         if (!id) return;
-        set((state) => {
-            state.activeChartId = id;
+        set((draft) => {
+            draft.activeChartId = id;
         });
     },
     setActiveChartSymbol: (sym) => {
         if (!sym) return;
-        set((state) => {
-            const actId = state.activeChartId;
+        set((draft) => {
+            const actId = draft.activeChartId;
             if (!actId) return;
-            state.chartsById[actId].symbol = sym;
+            draft.chartsById[actId].symbol = sym;
         });
     },
     setAllChartsSymbol: (sym) => {
@@ -108,10 +107,10 @@ export const creatChartDataSlice: StateCreator<
     },
     setActiveChartTimeframe: (timeframe) => {
         if (!timeframe) return;
-        set((state) => {
-            const actId = state.activeChartId;
+        set((draft) => {
+            const actId = draft.activeChartId;
             if (!actId) return;
-            state.chartsById[actId].timeframe = timeframe;
+            draft.chartsById[actId].timeframe = timeframe;
         });
     },
     // addIndicatorToActiveChart: (indicatorId) => {
@@ -135,23 +134,23 @@ export const creatChartDataSlice: StateCreator<
     // },
     setInitLoadingByChartId: (id, loading) => {
         if (!id) return;
-        set((state) => {
-            if (!state.chartsById[id]) return;
-            state.chartsById[id].initLoading = loading;
+        set((draft) => {
+            if (!draft.chartsById[id]) return;
+            draft.chartsById[id].initLoading = loading;
         });
     },
     setPrevLoadingByChartId: (id, loading) => {
         if (!id) return;
-        set((state) => {
-            state.chartsById[id].prevLoading = loading;
+        set((draft) => {
+            draft.chartsById[id].prevLoading = loading;
         });
     },
     setInitCandlesByChartId: (id, candlesArr) => {
         if (!id) return;
-        set((state) => {
-            const chart = state.chartsById[id];
+        set((draft) => {
+            const chart = draft.chartsById[id];
             if (!chart) return;
-            if (!state.chartsById[id]) return;
+            // if (!draft.chartsById[id]) return;
             chart.candles = [...candlesArr];
             chart.firstHistoryTime = candlesArr[0].time;
             // console.log(candlesArr);
@@ -160,20 +159,20 @@ export const creatChartDataSlice: StateCreator<
     },
     setTempCandlesByChartId: (id, candlesArr) => {
         if (!id) return;
-        set((state) => {
-            const chart = state.chartsById[id];
+        set((draft) => {
+            const chart = draft.chartsById[id];
             if (!chart) return;
-            if (!state.chartsById[id]) return;
+            // if (!draft.chartsById[id]) return;
             chart.tempCandles = [...candlesArr];
         });
     },
     setCacheCandlesByChartId: (id, candlesArr) => {
         if (!id) return;
-        set((state) => {
-            if (!state.chartsById[id]) return;
-            state.chartsById[id].cacheCandles = [...candlesArr];
+        set((draft) => {
+            if (!draft.chartsById[id]) return;
+            draft.chartsById[id].cacheCandles = [...candlesArr];
             if (candlesArr.length <= 0) {
-                state.chartsById[id].firstHistoryTime = null;
+                draft.chartsById[id].firstHistoryTime = null;
             }
         });
     },
@@ -189,12 +188,12 @@ export const creatChartDataSlice: StateCreator<
     },
     updateHistoryByChartId: (id, candlesArr) => {
         if (!id) return;
-        set((state) => {
-            const chart = state.chartsById[id];
+        set((draft) => {
+            const chart = draft.chartsById[id];
             if (!chart) return;
             chart.candles.unshift(...candlesArr);
             // state.chartsById[id].candles = [...candlesArr];
-            state.chartsById[id].firstHistoryTime = candlesArr[0].time;
+            draft.chartsById[id].firstHistoryTime = candlesArr[0].time;
         });
     },
     updateLiveCandleByChartId: (id, candle) => {

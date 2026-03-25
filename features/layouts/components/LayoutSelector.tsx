@@ -10,10 +10,7 @@ function getLable(numRows: number, numCols: number) {
 }
 export default function LayoutSelector({ layouts }: LayoutSelectorProps) {
     const params = useParams();
-    const layoutId = Number(params.layoutId);
-    if (Number.isNaN(layoutId)) {
-        throw new Error('Invalid layoutId');
-    }
+    const layoutId = Number(params?.layoutId) ?? null;
     return (
         <>
             <div className="px-3 py-2 text-sm">Select layout</div>
@@ -29,7 +26,7 @@ export default function LayoutSelector({ layouts }: LayoutSelectorProps) {
                               transition
                               ${active ? 'bg-active' : 'hover:bg-hover'}`}
                             onClick={() =>
-                                redirect(`/chart/${id}/${params.symbol}`)
+                                redirect(`/terminal/${id}/${params.symbol}`)
                             }
                         >
                             <span className="w-10 text-left">{label}</span>

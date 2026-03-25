@@ -9,13 +9,3 @@ export default function ChartLayout() {
         </main>
     );
 }
-
-// export default function ChartLayout() {
-//     return (
-//         <main className="w-full h-full">
-//             <ChartGrids>
-//                 <AllCharts />
-//             </ChartGrids>
-//         </main>
-//     );
-// }

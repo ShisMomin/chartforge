@@ -5,7 +5,10 @@ import CoinIcon from '@/shared/components/ui/CoinIcon';
 import Table from '@/shared/components/ui/Table';
 import { useBinanceSocket } from '@/shared/providers/binance-socket-provider';
 import { Ticker } from '@/shared/types/common';
+import { selectSyncSymbolAndIndicator } from '@/store/selectors/chartDataSelectors';
+import { useStore } from '@/store/store';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useShallow } from 'zustand/shallow';
 
 function formatPrice(price: string | number) {
     const num = Number(price);
@@ -34,9 +37,10 @@ export default function WatchlistTable({
 }) {
     const { mutate: removeSymbol } = useRemoveWatchlist();
     const coinsRef = useRef(createCoinsMap(data));
-    // const symbolsRef = useRef(data.map((coin) => coin.symbol));
     const [finalData, setFinalData] = useState(data);
     const { socket } = useBinanceSocket();
+    const { setActiveChartSymbol, setAllChartsSymbol } = useStore();
+    const { syncSymbol } = useStore(useShallow(selectSyncSymbolAndIndicator));
     const onTickerData = useCallback(function (e: BinanceTickerEvent) {
         // console.log(e);
         const symbol = e.s;
@@ -53,14 +57,24 @@ export default function WatchlistTable({
     useEffect(
         function () {
             if (!socket) return;
-            // const symbols = symbolsRef.current;
 
             const symbols = data.map((c) => c.symbol);
-            socket.subscribeTicker(symbols);
-            socket.addTickerHandler(onTickerData);
+
+            let subscribed = false;
+
+            const timer = setTimeout(() => {
+                socket.subscribeTicker(symbols);
+                socket.addTickerHandler(onTickerData);
+                subscribed = true;
+            }, 10000);
+
             return () => {
-                socket.unsubscribeTicker(symbols);
-                socket.removeTickerHandler(onTickerData);
+                clearTimeout(timer);
+
+                if (subscribed) {
+                    socket.unsubscribeTicker(symbols);
+                    socket.removeTickerHandler(onTickerData);
+                }
             };
         },
         [data, socket, onTickerData],
@@ -81,7 +95,19 @@ export default function WatchlistTable({
         const price = formatPrice(c.lastPrice);
         const percent = Number(c.priceChangePercent);
         return (
-            <Table.Row key={c.symbol}>
+            <Table.Row
+                key={c.symbol}
+                onClick={() => {
+                    if (isEditable) return;
+                    if (!syncSymbol) {
+                        setActiveChartSymbol(c.symbol);
+                    } else {
+                        setAllChartsSymbol(c.symbol);
+                    }
+                }}
+                isRedirectable={isEditable}
+                to={isEditable ? `/overview/${c.symbol}` : ''}
+            >
                 <div>
                     <CoinIcon symbol={c.symbol} />
                 </div>
@@ -95,7 +121,10 @@ export default function WatchlistTable({
                 {isEditable && (
                     <button
                         className="px-2 py-1 text-xs md:text-sm  text-gray-400 hover:text-red-500 transition cursor-pointer"
-                        onClick={() => removeSymbol(c.symbol)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            removeSymbol(c.symbol);
+                        }}
                     >
                         Remove
                     </button>

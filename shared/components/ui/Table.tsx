@@ -24,11 +24,13 @@
 // }
 
 'use client';
+import { useRouter } from 'next/navigation';
 import React, {
     createContext,
     useContext,
     ReactNode,
     CSSProperties,
+    MouseEvent,
 } from 'react';
 
 interface TableContextType {
@@ -49,7 +51,16 @@ interface TableProps {
 interface TableSectionProps {
     children: ReactNode;
 }
+interface TableSectionWithOnClickProps extends TableSectionProps {
+    onClick?: (e: MouseEvent<HTMLDivElement>) => void;
+}
+type TableRowProps = {
+    children: ReactNode;
+    onClick?: (e: MouseEvent<HTMLDivElement>) => void;
 
+    isRedirectable?: boolean;
+    to?: string;
+};
 function Table({ columns, scroll = false, label = '', children }: TableProps) {
     return (
         <TableContext.Provider value={{ columns, scroll, label }}>
@@ -70,6 +81,7 @@ function Table({ columns, scroll = false, label = '', children }: TableProps) {
     );
 }
 
+// md:gap-x-4 md:px-3 md:py-3
 function Header({ children }: TableSectionProps) {
     const context = useContext(TableContext);
     if (!context) throw new Error('Header must be used inside Table');
@@ -88,7 +100,7 @@ function Header({ children }: TableSectionProps) {
             > */}
             <div
                 style={{ gridTemplateColumns: context.columns }}
-                className={`grid items-center gap-x-4 px-3 py-4 border-b border-panel-border uppercase tracking-wide font-semibold text-gray-400 text-xs sm:text-sm ${context.scroll ? 'sticky top-0 bg-background' : ''}`}
+                className={`grid items-center gap-x-1 px-2 py-2  border-b border-panel-border uppercase tracking-wide font-semibold text-gray-400 text-xs sm:text-sm ${context.scroll ? 'sticky top-0 bg-background' : ''}`}
             >
                 {children}
             </div>
@@ -96,14 +108,32 @@ function Header({ children }: TableSectionProps) {
     );
 }
 
-function Row({ children }: TableSectionProps) {
+function Row({
+    children,
+    onClick,
+    isRedirectable = false,
+    to = '',
+}: TableRowProps) {
     const context = useContext(TableContext);
+    const router = useRouter();
     if (!context) throw new Error('Row must be used inside Table');
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        // priority: custom click first
+        onClick?.(e);
 
+        // redirect logic
+        if (isRedirectable && to) {
+            router.push(to);
+        }
+    };
     return (
         <div
             style={{ gridTemplateColumns: context.columns }}
-            className=" grid items-center gap-x-4 px-3 py-3 border-b border-panel-border last:border-b-0 text-xs sm:text-sm hover:bg-hover cursor-pointer"
+            className=" grid items-center gap-x-2 px-2 py-2  border-b border-panel-border last:border-b-0 text-xs sm:text-sm hover:bg-hover cursor-pointer"
+            onClick={
+                // onClick?.(e);
+                handleClick
+            }
         >
             {children}
         </div>

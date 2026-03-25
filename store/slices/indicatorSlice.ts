@@ -102,8 +102,8 @@ export const createIndicatorDataSlice: StateCreator<
 > = (set, get) => ({
     indicatorsByChartId: {},
     setInitIndicatorData: (chartId, indicatorIds) => {
-        set((state) => {
-            state.indicatorsByChartId[chartId] =
+        set((draft) => {
+            draft.indicatorsByChartId[chartId] =
                 indicatorIds.reduce<IndicatorWithId>((acc, id) => {
                     const registry = indicatorRegistry.find(
                         (ind) => ind.id === id,
@@ -119,8 +119,8 @@ export const createIndicatorDataSlice: StateCreator<
         });
     },
     clearIndicatorData: () => {
-        set((state) => {
-            state.indicatorsByChartId = {};
+        set((draft) => {
+            draft.indicatorsByChartId = {};
         });
     },
     addIndicatorByActiveChartId: (indicRegistry) => {
@@ -203,10 +203,10 @@ export const createIndicatorDataSlice: StateCreator<
         });
     },
     removeIndicatorByActiveChartId: (indicRegistry) => {
-        set((state) => {
-            const actId = state.activeChartId;
+        set((draft) => {
+            const actId = draft.activeChartId;
             if (!actId) return;
-            delete state.indicatorsByChartId[actId]?.[indicRegistry.id];
+            delete draft.indicatorsByChartId[actId]?.[indicRegistry.id];
         });
     },
     removeIndicatorFromAllCharts: (indicRegistry) => {
@@ -220,19 +220,19 @@ export const createIndicatorDataSlice: StateCreator<
     },
     removeAllIndicatorFromAllCharts: () => {
         let isRemoved = false;
-        set((state) => {
-            const chartIds = state.layout?.chartIds;
+        set((draft) => {
+            const chartIds = draft.layout?.chartIds;
             if (!chartIds || chartIds.length <= 0) return;
-            isRemoved = true;
             for (const chartId of chartIds) {
                 const allIndicatorIds = Object.keys(
-                    state.indicatorsByChartId[chartId],
+                    draft.indicatorsByChartId[chartId],
                 );
                 if (allIndicatorIds.length <= 0) continue;
                 for (const indId of allIndicatorIds) {
-                    delete state.indicatorsByChartId[chartId]?.[indId];
+                    delete draft.indicatorsByChartId[chartId]?.[indId];
                 }
             }
+            isRemoved = true;
         });
         return isRemoved;
     },

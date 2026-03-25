@@ -3,6 +3,7 @@ import CandlestickChart from '@/features/layouts/charts/CandlestickChart';
 import ChartDataEngineProvider from '@/shared/providers/chart-data-engine-provider';
 import { useStore } from '@/store/store';
 import { selectLayout } from '@/store/selectors/layoutSelectors';
+import ChartRefsProvider from '@/shared/providers/chart-refs-provider';
 
 export default function LayoutCharts() {
     const layoutData = useStore(selectLayout);
@@ -15,7 +16,9 @@ export default function LayoutCharts() {
             {chartIds.map((id) => (
                 <ChartDataEngineProvider chartId={id} key={id}>
                     <div className="w-full h-full min-h-0 min-w-0">
-                        <CandlestickChart />
+                        <ChartRefsProvider>
+                            <CandlestickChart />
+                        </ChartRefsProvider>
                     </div>
                 </ChartDataEngineProvider>
             ))}

@@ -46,7 +46,6 @@ export default function CoinsStatusClient({ initialData }: Props) {
         };
     }, [usdt_pairs]);
 
-    // console.log(topGainers);
     return (
         <div className="p-2 grid grid-cols-1 md3:grid-cols-2 gap-x-5 gap-y-5">
             <CoinsStatusTable

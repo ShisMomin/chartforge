@@ -3,7 +3,7 @@ import { useChartDataEngine } from '@/shared/providers/chart-data-engine-provide
 import { selectChartIndicatorByChartId } from '@/store/selectors/indicatorsDataSelectors';
 import { useStore } from '@/store/store';
 import { Time } from 'lightweight-charts';
-import { PaneLegend } from 'lwc-plugin-pracplugin';
+import { PaneLegend } from '@shismomin/lwc-plugin-pracplugin';
 import CustomLineSeries from '../../shared/components/chart-components/series/CustomLineSeries';
 
 type Props = {

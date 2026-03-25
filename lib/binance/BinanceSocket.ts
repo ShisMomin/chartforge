@@ -54,7 +54,7 @@ export class BinanceSocket {
             clearTimeout(this.heartbeatTimeout);
         }
         this.heartbeatTimeout = setTimeout(() => {
-            console.log('Heartbeat timeout — reconnecting...');
+            // console.log('Heartbeat timeout — reconnecting...');
             this.ws?.close();
         }, this.HEARTBEAT_TIMEOUT);
     }
@@ -76,7 +76,7 @@ export class BinanceSocket {
         this.ws = new WebSocket(this.baseUrl);
         this.ws.onopen = () => {
             if (this.socketOpenHandler) this.socketOpenHandler();
-            console.log('BinanceSocket connected!');
+            // console.log('BinanceSocket connected!');
         };
         this.ws.onmessage = (event) => {
             this.resetHeartBeat();
@@ -95,7 +95,7 @@ export class BinanceSocket {
             }
         };
         this.ws.onclose = (error) => {
-            console.log('BinanceSocket closed', error);
+            // console.log('BinanceSocket closed', error);
             this.ws = null;
             if (this.heartbeatTimeout) {
                 clearTimeout(this.heartbeatTimeout);

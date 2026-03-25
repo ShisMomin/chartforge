@@ -2,6 +2,9 @@ import MarketAllCoinsServer from '@/features/markets/MarketAllCoins.server';
 import BinanceSocketProvider from '@/shared/providers/binance-socket-provider';
 import React from 'react';
 
+export const metadata = {
+    title: 'Markets',
+};
 export default function Page() {
     return (
         <BinanceSocketProvider>

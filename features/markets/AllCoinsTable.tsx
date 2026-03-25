@@ -1,4 +1,6 @@
+'use client';
 import { Ticker } from '@/shared/types/common';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { TableVirtuoso } from 'react-virtuoso';
 
@@ -54,6 +56,7 @@ const ValueCell = React.memo(function ValueCell({
 });
 
 export default function AllCoinsTable({ coinsInfoList }: Props) {
+    const router = useRouter();
     return (
         <div className="w-full h-full ">
             <TableVirtuoso
@@ -74,7 +77,10 @@ export default function AllCoinsTable({ coinsInfoList }: Props) {
                     TableRow: (props) => (
                         <tr
                             {...props}
-                            className="cursor-pointer hover:bg-hover/30"
+                            onClick={() =>
+                                router.push(`/overview/${props.item.symbol}`)
+                            }
+                            className="cursor-pointer hover:bg-hover/30 active:scale-[0.998] transition"
                         />
                     ),
                 }}
@@ -121,6 +127,7 @@ export default function AllCoinsTable({ coinsInfoList }: Props) {
                 itemContent={(index, c) => {
                     return (
                         <>
+                            {/* <> */}
                             <SymbolCell symbol={c.symbol} />
 
                             <ValueCell

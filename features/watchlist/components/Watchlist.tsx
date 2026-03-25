@@ -35,15 +35,3 @@ export default function Watchlist({ isEditable }: { isEditable: boolean }) {
         </>
     );
 }
-
-{
-    /* <SearchSymbol
-    isRedirect={true}
-    watchlist={true}
-    watchlistAddFn={(symbol) => mutate(symbol)}
-    watchlistData={data}
->
-    <AddWatchlistButton />
-</SearchSymbol>
-<WatchlistTable data={data} /> */
-}

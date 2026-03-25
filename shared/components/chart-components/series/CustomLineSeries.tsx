@@ -8,7 +8,10 @@ import {
     SeriesOptionsCommon,
     Time,
 } from 'lightweight-charts';
-import { CrosshairListener, PaneLegend } from 'lwc-plugin-pracplugin';
+import {
+    CrosshairListener,
+    PaneLegend,
+} from '@shismomin/lwc-plugin-pracplugin';
 import { PlotConfig } from 'oakscriptjs';
 import React, { useEffect, useRef } from 'react';
 type LineSeriesData = {

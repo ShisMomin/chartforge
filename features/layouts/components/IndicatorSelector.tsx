@@ -9,17 +9,13 @@ import { selectActiveChartIndicatorIds } from '@/store/selectors/indicatorsDataS
 import { useShallow } from 'zustand/shallow';
 import { selectSyncSymbolAndIndicator } from '@/store/selectors/chartDataSelectors';
 
-// type IndicatorsType = {
-//     id: number;
-//     name: string;
-// };
 export default function IndicatorSelector() {
     const [query, setQuery] = useState('');
     const {
         addIndicatorByActiveChartId,
         removeIndicatorByActiveChartId,
         addIndicatorOnPaneByActiveChartId,
-        removeIndicatorOnPaneByActiveChartId,
+        removeIndicatorFromPaneByActiveChartId,
         removeIndicatorFromAllChartPanes,
         removeIndicatorFromAllCharts,
         addIndicatorOnAllChartPanes,
@@ -31,7 +27,6 @@ export default function IndicatorSelector() {
     const { syncIndicator } = useStore(
         useShallow(selectSyncSymbolAndIndicator),
     );
-    // const activeIndicatorIds = [];
     // Filter indicators based on search query
     const filtered: IndicatorRegistryEntry[] = useMemo(() => {
         if (!query.trim()) {
@@ -54,23 +49,21 @@ export default function IndicatorSelector() {
     ) {
         if (!syncIndicator) {
             if (isIndiActive)
-                if (removeIndicatorOnPaneByActiveChartId(indicRegistry))
+                if (removeIndicatorFromPaneByActiveChartId(indicRegistry))
                     return removeIndicatorByActiveChartId(indicRegistry);
-            // return removeIndicatorByActiveChartId(indicatorRegistry.id);
             if (addIndicatorOnPaneByActiveChartId(indicRegistry))
                 return addIndicatorByActiveChartId(indicRegistry);
         } else {
             if (isIndiActive)
                 if (removeIndicatorFromAllChartPanes(indicRegistry))
                     return removeIndicatorFromAllCharts(indicRegistry);
-            // return removeIndicatorByActiveChartId(indicatorRegistry.id);
             if (addIndicatorOnAllChartPanes(indicRegistry))
                 return addIndicatorOnAllChart(indicRegistry);
         }
     }
     return (
         <>
-            <div className="px-3 py-2 text-sm">Select indicator</div>
+            <span className="px-3 py-2 text-sm">Select indicator</span>
             <div className="flex flex-col gap-2 p-2 min-h-50">
                 <div className="px-3 py-2">
                     <input

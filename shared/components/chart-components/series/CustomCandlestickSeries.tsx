@@ -9,7 +9,10 @@ import {
     SeriesOptionsCommon,
     Time,
 } from 'lightweight-charts';
-import { CrosshairListener, PaneLegend } from 'lwc-plugin-pracplugin';
+import {
+    CrosshairListener,
+    PaneLegend,
+} from '@shismomin/lwc-plugin-pracplugin';
 import { useEffect, useRef } from 'react';
 
 interface Props {

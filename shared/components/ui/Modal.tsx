@@ -88,4 +88,5 @@ function Window({ children, name }: ModalWindowProps) {
 //   transform shadow-lg px-16 py-12 transition-all duration-500 bg
 Modal.Open = Open;
 Modal.Window = Window;
+
 export default Modal;

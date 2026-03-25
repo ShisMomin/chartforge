@@ -24,7 +24,7 @@ export default function BinanceSocketProvider({ children }: Props) {
     const socketRef = useRef<BinanceSocket | null>(null);
     const [socket, setSocket] = useState<BinanceSocket | null>(null);
     const handleSocket = useCallback(function (sckt: BinanceSocket | null) {
-        console.log(sckt);
+        // console.log(sckt);
         setSocket(sckt);
     }, []);
     useEffect(() => {

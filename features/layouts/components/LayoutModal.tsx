@@ -6,6 +6,7 @@ type LayoutModalProps = {
     source: ReactNode;
     children: ReactNode;
     modalWidth?: number;
+    possition: Position;
 };
 
 type Position = {
@@ -17,6 +18,7 @@ export default function LayoutModal({
     source,
     children,
     modalWidth = 200,
+    possition,
 }: LayoutModalProps) {
     const [open, setOpen] = useState<boolean>(false);
     const [pos, setPos] = useState<Position>({ top: 0, left: 0 });
@@ -36,8 +38,8 @@ export default function LayoutModal({
             left = viewportWidth - modalWidth - 8;
 
         setPos({
-            top: rect.bottom + 10, // 10px gap
-            left,
+            top: rect.bottom - possition.top, // 10px gap
+            left: left - possition.left,
         });
 
         setOpen((v) => !v);

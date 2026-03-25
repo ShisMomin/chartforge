@@ -112,7 +112,11 @@ export default function CoinsStatusTable({
                 const percent = Number(c.priceChangePercent);
                 const volume = Number(c.quoteVolume);
                 return (
-                    <Table.Row key={c.symbol}>
+                    <Table.Row
+                        key={c.symbol}
+                        isRedirectable={true}
+                        to={`/overview/${c.symbol}`}
+                    >
                         <div>
                             <CoinIcon symbol={c.symbol} />
                         </div>

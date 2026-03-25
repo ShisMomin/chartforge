@@ -1,9 +1,7 @@
-import { useChartDataEngine } from '@/shared/providers/chart-data-engine-provider';
-import { selectActiveChartId } from '@/store/selectors/chartDataSelectors';
-import { useStore } from '@/store/store';
+'use client';
+import { useChartRefs } from '@/shared/providers/chart-refs-provider';
 import { Chart } from '@shismomin/lightweight-charts-react-components';
-import { IChartApi } from 'lightweight-charts';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 const chartOptions = {
     // width: 200,
     // height: 500,
@@ -57,36 +55,80 @@ const chartOptions = {
                 hour12: false,
             });
         },
-        // priceFormatter: (price) => price.toFixed(0),
     },
 };
 type CustomChartProps = {
     children: ReactNode;
-    initChartInstance?: (chart: IChartApi) => void; // better than Function
 };
 
-export default function CustomChart({
-    children,
-    initChartInstance,
-}: CustomChartProps) {
-    // const { setActiveChartId } = useStore();
-    // const { chartId, initChartInstance } = useChartDataEngine();
-    // const activeChartId = useStore(selectActiveChartId);
+const getMode = (width: number) => {
+    if (width <= 150) return 'mini';
+    if (width <= 300) return 'mobile';
+    if (width <= 500) return 'tablet';
+    return 'desktop';
+};
+export default function CustomChart({ children }: CustomChartProps) {
+    const chartContainerRef = useRef<HTMLDivElement | null>(null);
+    const { chartRef: chartApiRef, initChartInstance } = useChartRefs();
+    useEffect(
+        function () {
+            if (!chartContainerRef.current) return;
+
+            const chartContainer = chartContainerRef.current;
+
+            let currentMode = '';
+
+            const observer = new ResizeObserver((entries) => {
+                const { width } = entries[0].contentRect;
+                const chartApi = chartApiRef.current;
+                if (!chartApi) return;
+                const newMode = getMode(width);
+                if (newMode === currentMode) return;
+                if (newMode === 'mini') {
+                    chartApi.applyOptions({
+                        layout: { fontSize: 9 },
+                        rightPriceScale: { visible: false },
+                    });
+                }
+                if (newMode === 'mobile') {
+                    chartApi.applyOptions({
+                        layout: { fontSize: 9 },
+                        rightPriceScale: { visible: true },
+                    });
+                }
+
+                if (newMode === 'tablet') {
+                    chartApi.applyOptions({
+                        layout: { fontSize: 9 },
+                        rightPriceScale: { visible: true },
+                    });
+                }
+
+                if (newMode === 'desktop') {
+                    chartApi.applyOptions({
+                        layout: { fontSize: 12 },
+                        rightPriceScale: { visible: true },
+                    });
+                }
+
+                currentMode = newMode;
+            });
+
+            observer.observe(chartContainer);
+
+            return () => observer.disconnect();
+        },
+        [chartApiRef],
+    );
 
     return (
-        // <div
-        //     className={`w-full h-full min-h-0 min-w-0 flex ${activeChartId === chartId ? 'border-2 border-active-border' : ''}`}
-        //     onClick={() =>
-        //         setActiveChartId(chartId === activeChartId ? null : chartId)
-        //     }
-        // >
         <Chart
             onInit={initChartInstance}
             options={chartOptions}
+            ref={chartContainerRef}
             containerProps={{ style: { width: '100%', height: '100%' } }}
         >
             {children}
         </Chart>
-        // </div>
     );
 }

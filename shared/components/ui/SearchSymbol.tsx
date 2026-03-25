@@ -151,7 +151,10 @@ function SearchSym({
                                 <Link
                                     key={s.symbol}
                                     className="flex items-center px-4 md:px-6 py-3 border-b border-search hover:bg-hover cursor-pointer transition"
-                                    href={`/chart/4/${s.symbol}`}
+                                    href={`/overview/${s.symbol}`}
+                                    onClick={() => {
+                                        onCloseModal?.();
+                                    }}
                                 >
                                     {/* Symbol */}
                                     <div className="flex-1 font-medium flex gap-2">
@@ -239,52 +242,6 @@ function SearchSym({
     );
 }
 
-//  {isLoading ? (
-//                 <Spinner />
-//             ) : (
-//                 <>
-//                     {/* {list header } */}
-//                     <div className="flex py-2 px-4 border-b-2 border-t-2 border-search ">
-//                         <span className="flex-1">Symbol</span>
-//                         <span className="flex-1">Description</span>
-//                         <span className="w-20 text-right">Exchange</span>
-//                     </div>
-
-//                     <div className="flex-1 overflow-y-auto">
-//                         {filteredSymbols.map((s) => (
-//                             <div
-//                                 className="flex items-center px-4 py-2 border-b border-search hover:bg-hover cursor-pointer"
-//                                 key={s.symbol}
-//                                 onClick={() => onCloseModal?.()}
-//                             >
-//                                 <div className="flex-1 font-medium">
-//                                     <span className="">{s.base}</span>
-//                                     <span className="text-primary-400 ml-1">
-//                                         {s.quote}
-//                                     </span>
-//                                 </div>
-//                                 <div className="flex-1 text-primary-400 font-[13px]">
-//                                     {s.base} / {s.quote}
-//                                 </div>
-//                                 <div className="w-20 text-right">BINANCE</div>
-//                             </div>
-//                         ))}
-//                     </div>
-//                 </>
-//             )}
-
-//   <div className="flex items-center px-4 py-2 border-b border-search hover:bg-hover">
-//                             <div className="flex-1 font-medium">
-//                                 <span className="">BTC</span>
-//                                 <span className="text-primary-400 ml-1">
-//                                     USDT
-//                                 </span>
-//                             </div>
-//                             <div className="flex-1 text-primary-400 font-[13px]">
-//                                 BTC / USDT
-//                             </div>
-//                             <div className="w-20 text-right">BINANCE</div>
-//                         </div>
 export default function SearchSymbol({
     children,
     isRedirect = false,
