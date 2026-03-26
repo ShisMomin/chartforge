@@ -16,5 +16,3 @@ A professional **crypto trading dashboard** with real-time market data, interact
 - React + TailwindCSS
 - Zustand + Immer
 - Binance WebSocket API
-
-git remote add origin https://github.com/ShisMomin/chartforge

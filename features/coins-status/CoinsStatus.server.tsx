@@ -4,11 +4,16 @@ async function getAllCoins24hStatus() {
         // Server side
         const res = await fetch(
             'https://api.binance.com/api/v3/ticker/24hr',
-            // { next: { revalidate: 60 } }, // cache 10 seconds
-            { cache: 'no-store' },
+            { next: { revalidate: 10 } }, // cache 10 seconds
+            // { cache: 'no-store' },
         );
 
         const allCoinsData = await res.json();
+        if (!Array.isArray(allCoinsData)) {
+            console.error('Binance API Error:', allCoinsData);
+            return [];
+        }
+
         return allCoinsData;
     } catch (error) {
         // Return mock data on error
