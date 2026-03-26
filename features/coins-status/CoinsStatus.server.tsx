@@ -9,6 +9,7 @@ async function getAllCoins24hStatus() {
         );
 
         const allCoinsData = await res.json();
+        console.log(allCoinsData);
         if (!Array.isArray(allCoinsData)) {
             console.error('Binance API Error:', allCoinsData);
             return [];
