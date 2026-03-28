@@ -8,7 +8,7 @@ export default function Footer() {
             </p>
 
             <a
-                href="https://github.com/your-username/your-repo"
+                href="https://github.com/ShisMomin/chartforge"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-foreground transition"

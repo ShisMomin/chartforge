@@ -8,7 +8,6 @@ interface Props {
 }
 
 export default function CoinsStatusClient({ initialData }: Props) {
-    console.log(initialData);
     const usdt_pairs = useMemo(() => {
         return initialData.filter((t) => t.symbol.endsWith('USDT'));
     }, [initialData]);

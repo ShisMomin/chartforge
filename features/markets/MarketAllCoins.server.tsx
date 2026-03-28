@@ -17,7 +17,7 @@ async function getAllCoins24hStatus() {
         return allCoinsData;
     } catch (error) {
         // Return mock data on error
-        // console.log(error);
+        console.log(error);
         return [];
     }
 }

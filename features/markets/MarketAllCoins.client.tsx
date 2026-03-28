@@ -1,28 +1,14 @@
 'use client';
 import { Ticker } from '@/shared/types/common';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FilterSection from './FilterSection';
 import AllCoinsTable from './AllCoinsTable';
-import { BinanceTickerEvent } from '@/lib/binance/BinanceSocket';
-import { useBinanceSocket } from '@/shared/providers/binance-socket-provider';
 import { useSearchParams } from 'next/navigation';
 
 interface Props {
     initialData: Ticker[];
     activeQuoteCurrencies: string[];
 }
-// const orderValues = {
-//     lastPrice: 'Price',
-//     priceChangePercent: '24h Change',
-//     priceChange: 'Price Change',
-//     quoteVolume: '24h Volume',
-// };
-// const orderValues = {
-//     Price: 'lastPrice',
-//     '24hChange': 'priceChangePercent',
-//     'Price Change': 'priceChange',
-//     '24h Volume': 'quoteVolume',
-// };
 type OrderKey = keyof Ticker;
 export const orderValues = {
     price: { label: 'Price', value: 'lastPrice' },
@@ -39,11 +25,6 @@ export default function MarketAllCoinsClient({
     activeQuoteCurrencies,
 }: Props) {
     const coinsRef = useRef(createCoinsMap(initialData));
-    // const symbolsRef = useRef(initialData.map((coin) => coin.symbol));
-    const { socket } = useBinanceSocket();
-    // const [quoteCurrency, setQuoteCurrency] = useState('All');
-    // const [sortOrderType, setSortOrderType] = useState('DESC');
-    // const [orderValue, setOrderValue] = useState<OrderKey>('lastPrice');
     const searchParams = useSearchParams();
     const quoteCurrency = searchParams.get('quote') || 'All';
     const orderType = searchParams.get('orderType') || 'DESC';
@@ -51,31 +32,7 @@ export default function MarketAllCoinsClient({
         'lastPrice') as OrderKey;
     const [orderLable, setOrderLable] = useState('Price');
     const [finalCoinsList, setFinalCoinsList] = useState(initialData);
-    const onTickerData = useCallback(function (
-        allSymbolTick: BinanceTickerEvent[],
-    ) {
-        for (const tick of allSymbolTick) {
-            const symbol = tick.s;
-            const existing = coinsRef.current.get(symbol);
-            if (!existing) break;
-            coinsRef.current.set(symbol, {
-                ...existing,
-                lastPrice: tick.c,
-                priceChangePercent: tick.P,
-                priceChange: tick.p,
-                quoteVolume: tick.q,
-            });
-        }
-    }, []);
 
-    // function handleQuoteCurrency(currency: string) {
-    //     const params = new URLSearchParams(searchParams);
-
-    //     params.set('quote', currency);
-
-    //     router.replace(`/markets?${params.toString()}`);
-    //     // setQuoteCurrency(item);
-    // }
     function handleQuoteCurrency(currency: string) {
         const params = new URLSearchParams(searchParams);
 
@@ -83,13 +40,7 @@ export default function MarketAllCoinsClient({
 
         window.history.replaceState(null, '', `/markets?${params.toString()}`);
     }
-    // function handleSortOrderType(value: string) {
-    //     const params = new URLSearchParams(searchParams);
-    //     params.set('orderType', value);
 
-    //     router.replace(`/markets?${params.toString()}`);
-    //     // setSortOrderType(value);
-    // }
     function handleSortOrderType(value: string) {
         const params = new URLSearchParams(searchParams);
 
@@ -98,18 +49,6 @@ export default function MarketAllCoinsClient({
         window.history.replaceState(null, '', `/markets?${params.toString()}`);
     }
 
-    // function handleSortOrderValues(value: string) {
-    //     const entry = Object.values(orderValues).find((o) => o.label === value);
-
-    //     if (!entry) return;
-
-    //     // setOrderValue(entry.value);
-    //     const params = new URLSearchParams(searchParams);
-    //     params.set('orderValue', entry.value);
-
-    //     router.replace(`/markets?${params.toString()}`);
-    //     setOrderLable(entry.label);
-    // }
     function handleSortOrderValues(value: string) {
         const entry = Object.values(orderValues).find((o) => o.label === value);
 
@@ -124,23 +63,6 @@ export default function MarketAllCoinsClient({
         setOrderLable(entry.label);
     }
 
-    useEffect(
-        function () {
-            if (!socket) return;
-            // const symbols = symbolsRef.current;
-            // console.log(symbols);
-            // socket.subscribeTicker(symbols);
-            socket.subscribeAllTicker();
-
-            socket.addAllTickerHandler(onTickerData);
-            return () => {
-                // socket.unsubscribeTicker(symbols);
-                socket.unsubscribeAllTicker();
-                socket.removeAllTickerHandler(onTickerData);
-            };
-        },
-        [socket, onTickerData],
-    );
     // useEffect(() => {
     //     const interval = setInterval(() => {
     //         let list = Array.from(coinsRef.current.values());
@@ -148,42 +70,45 @@ export default function MarketAllCoinsClient({
     //         if (quoteCurrency !== 'All') {
     //             list = list.filter((t) => t.symbol.endsWith(quoteCurrency));
     //         }
+
     //         const sorted: Ticker[] = [...list].sort((a, b) =>
-    //             sortOrderType === 'ASC'
+    //             orderType === 'ASC'
     //                 ? Number(a[orderValue]) - Number(b[orderValue])
     //                 : Number(b[orderValue]) - Number(a[orderValue]),
     //         );
-    //         setFinalCoinsList(sorted);
+
+    //         setFinalCoinsList((prev) => {
+    //             const same =
+    //                 prev.length === sorted.length &&
+    //                 prev.every((c, i) => c.symbol === sorted[i].symbol);
+
+    //             return same ? prev : sorted;
+    //         });
     //     }, 1000);
 
     //     return () => clearInterval(interval);
-    // }, [sortOrderType, orderValue, quoteCurrency]);
+    // }, [orderType, orderValue, quoteCurrency]);
+
     useEffect(() => {
-        const interval = setInterval(() => {
-            let list = Array.from(coinsRef.current.values());
+        let list = Array.from(coinsRef.current.values());
+        if (quoteCurrency !== 'All') {
+            list = list.filter((t) => t.symbol.endsWith(quoteCurrency));
+        }
 
-            if (quoteCurrency !== 'All') {
-                list = list.filter((t) => t.symbol.endsWith(quoteCurrency));
-            }
+        const sorted: Ticker[] = [...list].sort((a, b) =>
+            orderType === 'ASC'
+                ? Number(a[orderValue]) - Number(b[orderValue])
+                : Number(b[orderValue]) - Number(a[orderValue]),
+        );
 
-            const sorted: Ticker[] = [...list].sort((a, b) =>
-                orderType === 'ASC'
-                    ? Number(a[orderValue]) - Number(b[orderValue])
-                    : Number(b[orderValue]) - Number(a[orderValue]),
-            );
+        setFinalCoinsList((prev) => {
+            const same =
+                prev.length === sorted.length &&
+                prev.every((c, i) => c.symbol === sorted[i].symbol);
 
-            setFinalCoinsList((prev) => {
-                const same =
-                    prev.length === sorted.length &&
-                    prev.every((c, i) => c.symbol === sorted[i].symbol);
-
-                return same ? prev : sorted;
-            });
-        }, 1000);
-
-        return () => clearInterval(interval);
+            return same ? prev : sorted;
+        });
     }, [orderType, orderValue, quoteCurrency]);
-
     return (
         <div className="h-full w-full flex flex-col gap-2">
             <FilterSection

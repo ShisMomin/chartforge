@@ -1,4 +1,5 @@
 'use client';
+import CoinIcon from '@/shared/components/ui/CoinIcon';
 import { Ticker } from '@/shared/types/common';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -33,7 +34,10 @@ const SymbolCell = React.memo(function SymbolCell({
                 left: 0,
             }}
         >
-            {symbol}
+            <div className="flex items-center gap-3">
+                <CoinIcon symbol={symbol} />
+                {symbol}
+            </div>
         </td>
     );
 });
