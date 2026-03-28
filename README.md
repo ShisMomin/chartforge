@@ -51,7 +51,7 @@ BINANCE_REST_BASE_URL=https://api.binance.com/api/v3/klines
 🚀 Getting Started
 
 1. Clone the repository
-   git clone https://github.com/your-username/chartforge.git
+   git clone https://github.com/ShisMomin/chartforge.git
    cd chartforge
 2. Install dependencies
    npm install
