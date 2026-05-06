@@ -4,7 +4,7 @@ A professional crypto trading dashboard with real-time market data, interactive 
 
 🌐 Live Demo
 
-👉 https://chartforge-production-c132.up.railway.app/
+👉 [https://chartforge-production-c132.up.railway.app/](https://chartforge-w7lp.onrender.com/)
 
 📊 Features
 ⚡ Real-time Binance WebSocket data
