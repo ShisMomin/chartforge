@@ -4,11 +4,7 @@ A professional crypto trading dashboard with real-time market data, interactive 
 
 🌐 Live Demo
 
-<<<<<<< HEAD
 👉 https://chartforge-zcrq.onrender.com/
-=======
-👉 https://chartforge-w7lp.onrender.com/
->>>>>>> 2ddc408 (refactor(store): standardize Zustand callback parameter naming)
 
 📊 Features
 ⚡ Real-time Binance WebSocket data
