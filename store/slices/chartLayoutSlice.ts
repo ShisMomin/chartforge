@@ -27,9 +27,9 @@ export const createChartLayoutSlice: StateCreator<
 > = (set) => ({
     layout: null,
     setInitLayout: (chartLayout) => {
-        set((draft) => {
+        set((state) => {
             const { numRows, numCols, charts } = chartLayout;
-            draft.layout = {
+            state.layout = {
                 numRows,
                 numCols,
                 chartIds: charts.map((c) => c.chartId),
@@ -37,8 +37,8 @@ export const createChartLayoutSlice: StateCreator<
         });
     },
     clearLayout: () => {
-        set((draft) => {
-            draft.layout = null;
+        set((state) => {
+            state.layout = null;
         });
     },
 });

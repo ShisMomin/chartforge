@@ -9,6 +9,7 @@ export function finalIndicatorData(
     to: number,
 ) {
     const result = registry.calculate(bars, registry.defaultInputs);
+    console.log(result);
     if (!result || !result.plots) return null;
     const plots = result.plots as Record<string, IndicatorResult[]>;
     const slicedPlots: Record<string, IndicatorResult[]> = {};

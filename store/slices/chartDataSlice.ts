@@ -55,9 +55,9 @@ export const creatChartDataSlice: StateCreator<
     syncIndicator: false,
     syncSymbol: false,
     setInitChartData: (charts, sym = '') => {
-        set((draft) => {
-            draft.activeChartId = charts[0].chartId;
-            draft.chartsById = charts.reduce<Record<string, FullChartInfo>>(
+        set((state) => {
+            state.activeChartId = charts[0].chartId;
+            state.chartsById = charts.reduce<Record<string, FullChartInfo>>(
                 (acc, chart) => {
                     acc[chart.chartId] = {
                         ...chart,
@@ -77,22 +77,22 @@ export const creatChartDataSlice: StateCreator<
         });
     },
     clearInitChartData: () => {
-        set((draft) => {
-            draft.chartsById = {};
+        set((state) => {
+            state.chartsById = {};
         });
     },
     setActiveChartId: (id) => {
         if (!id) return;
-        set((draft) => {
-            draft.activeChartId = id;
+        set((state) => {
+            state.activeChartId = id;
         });
     },
     setActiveChartSymbol: (sym) => {
         if (!sym) return;
-        set((draft) => {
-            const actId = draft.activeChartId;
+        set((state) => {
+            const actId = state.activeChartId;
             if (!actId) return;
-            draft.chartsById[actId].symbol = sym;
+            state.chartsById[actId].symbol = sym;
         });
     },
     setAllChartsSymbol: (sym) => {
@@ -107,10 +107,10 @@ export const creatChartDataSlice: StateCreator<
     },
     setActiveChartTimeframe: (timeframe) => {
         if (!timeframe) return;
-        set((draft) => {
-            const actId = draft.activeChartId;
+        set((state) => {
+            const actId = state.activeChartId;
             if (!actId) return;
-            draft.chartsById[actId].timeframe = timeframe;
+            state.chartsById[actId].timeframe = timeframe;
         });
     },
     // addIndicatorToActiveChart: (indicatorId) => {
@@ -134,23 +134,23 @@ export const creatChartDataSlice: StateCreator<
     // },
     setInitLoadingByChartId: (id, loading) => {
         if (!id) return;
-        set((draft) => {
-            if (!draft.chartsById[id]) return;
-            draft.chartsById[id].initLoading = loading;
+        set((state) => {
+            if (!state.chartsById[id]) return;
+            state.chartsById[id].initLoading = loading;
         });
     },
     setPrevLoadingByChartId: (id, loading) => {
         if (!id) return;
-        set((draft) => {
-            draft.chartsById[id].prevLoading = loading;
+        set((state) => {
+            state.chartsById[id].prevLoading = loading;
         });
     },
     setInitCandlesByChartId: (id, candlesArr) => {
         if (!id) return;
-        set((draft) => {
-            const chart = draft.chartsById[id];
+        set((state) => {
+            const chart = state.chartsById[id];
             if (!chart) return;
-            // if (!draft.chartsById[id]) return;
+            // if (!state.chartsById[id]) return;
             chart.candles = [...candlesArr];
             chart.firstHistoryTime = candlesArr[0].time;
             // console.log(candlesArr);
@@ -159,47 +159,47 @@ export const creatChartDataSlice: StateCreator<
     },
     setTempCandlesByChartId: (id, candlesArr) => {
         if (!id) return;
-        set((draft) => {
-            const chart = draft.chartsById[id];
+        set((state) => {
+            const chart = state.chartsById[id];
             if (!chart) return;
-            // if (!draft.chartsById[id]) return;
+            // if (!state.chartsById[id]) return;
             chart.tempCandles = [...candlesArr];
         });
     },
     setCacheCandlesByChartId: (id, candlesArr) => {
         if (!id) return;
-        set((draft) => {
-            if (!draft.chartsById[id]) return;
-            draft.chartsById[id].cacheCandles = [...candlesArr];
+        set((state) => {
+            if (!state.chartsById[id]) return;
+            state.chartsById[id].cacheCandles = [...candlesArr];
             if (candlesArr.length <= 0) {
-                draft.chartsById[id].firstHistoryTime = null;
+                state.chartsById[id].firstHistoryTime = null;
             }
         });
     },
     setSyncIndicator: (value) => {
-        set((draft) => {
-            draft.syncIndicator = value;
+        set((state) => {
+            state.syncIndicator = value;
         });
     },
     setSyncSymbol: (value) => {
-        set((draft) => {
-            draft.syncSymbol = value;
+        set((state) => {
+            state.syncSymbol = value;
         });
     },
     updateHistoryByChartId: (id, candlesArr) => {
         if (!id) return;
-        set((draft) => {
-            const chart = draft.chartsById[id];
+        set((state) => {
+            const chart = state.chartsById[id];
             if (!chart) return;
             chart.candles.unshift(...candlesArr);
             // state.chartsById[id].candles = [...candlesArr];
-            draft.chartsById[id].firstHistoryTime = candlesArr[0].time;
+            state.chartsById[id].firstHistoryTime = candlesArr[0].time;
         });
     },
     updateLiveCandleByChartId: (id, candle) => {
         if (!id) return;
-        set((draft) => {
-            const { candles } = draft.chartsById[id];
+        set((state) => {
+            const { candles } = state.chartsById[id];
             if (candles.length <= 0) return;
             if (candles[candles.length - 1].time === candle.time) {
                 candles.pop();
@@ -212,8 +212,8 @@ export const creatChartDataSlice: StateCreator<
     updateLiveTempCandlesByChartId: (id, targetTime, candle) => {
         if (!id) return null;
         let liveAggData: CandleType | null = null;
-        set((draft) => {
-            const { tempCandles } = draft.chartsById[id];
+        set((state) => {
+            const { tempCandles } = state.chartsById[id];
             if (!tempCandles || tempCandles.length <= 0) return;
             const last = tempCandles[tempCandles.length - 1];
             if (last && last.time === candle.time) {

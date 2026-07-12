@@ -102,8 +102,8 @@ export const createIndicatorDataSlice: StateCreator<
 > = (set, get) => ({
     indicatorsByChartId: {},
     setInitIndicatorData: (chartId, indicatorIds) => {
-        set((draft) => {
-            draft.indicatorsByChartId[chartId] =
+        set((state) => {
+            state.indicatorsByChartId[chartId] =
                 indicatorIds.reduce<IndicatorWithId>((acc, id) => {
                     const registry = indicatorRegistry.find(
                         (ind) => ind.id === id,
@@ -119,8 +119,8 @@ export const createIndicatorDataSlice: StateCreator<
         });
     },
     clearIndicatorData: () => {
-        set((draft) => {
-            draft.indicatorsByChartId = {};
+        set((state) => {
+            state.indicatorsByChartId = {};
         });
     },
     addIndicatorByActiveChartId: (indicRegistry) => {
@@ -203,33 +203,33 @@ export const createIndicatorDataSlice: StateCreator<
         });
     },
     removeIndicatorByActiveChartId: (indicRegistry) => {
-        set((draft) => {
-            const actId = draft.activeChartId;
+        set((state) => {
+            const actId = state.activeChartId;
             if (!actId) return;
-            delete draft.indicatorsByChartId[actId]?.[indicRegistry.id];
+            delete state.indicatorsByChartId[actId]?.[indicRegistry.id];
         });
     },
     removeIndicatorFromAllCharts: (indicRegistry) => {
-        set((draft) => {
-            const chartIds = draft.layout?.chartIds;
+        set((state) => {
+            const chartIds = state.layout?.chartIds;
             if (!chartIds || chartIds.length <= 0) return;
             for (const chartId of chartIds) {
-                delete draft.indicatorsByChartId[chartId]?.[indicRegistry.id];
+                delete state.indicatorsByChartId[chartId]?.[indicRegistry.id];
             }
         });
     },
     removeAllIndicatorFromAllCharts: () => {
         let isRemoved = false;
-        set((draft) => {
-            const chartIds = draft.layout?.chartIds;
+        set((state) => {
+            const chartIds = state.layout?.chartIds;
             if (!chartIds || chartIds.length <= 0) return;
             for (const chartId of chartIds) {
                 const allIndicatorIds = Object.keys(
-                    draft.indicatorsByChartId[chartId],
+                    state.indicatorsByChartId[chartId],
                 );
                 if (allIndicatorIds.length <= 0) continue;
                 for (const indId of allIndicatorIds) {
-                    delete draft.indicatorsByChartId[chartId]?.[indId];
+                    delete state.indicatorsByChartId[chartId]?.[indId];
                 }
             }
             isRemoved = true;
@@ -252,7 +252,7 @@ export const createIndicatorDataSlice: StateCreator<
             to,
         );
         if (!result) return;
-        set((draft) => {
+        set((state) => {
             // if (!chartId || !indicRegistry) return;
             // const { barsData: bars, from, to } = getBars(cacheCandles, candles);
             // const result = finalIndicatorData(
@@ -262,7 +262,7 @@ export const createIndicatorDataSlice: StateCreator<
             //     from,
             //     to,
             // );
-            draft.indicatorsByChartId[chartId][indicRegistry.id] = {
+            state.indicatorsByChartId[chartId][indicRegistry.id] = {
                 registry: { ...indicRegistry },
                 result,
             };

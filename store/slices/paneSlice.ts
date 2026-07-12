@@ -59,8 +59,8 @@ export const createPaneSlice: StateCreator<
 > = (set) => ({
     paneByChartId: {},
     setInitPane: (charts) => {
-        set((draft) => {
-            draft.paneByChartId = charts.reduce<Record<string, PaneConfig[]>>(
+        set((state) => {
+            state.paneByChartId = charts.reduce<Record<string, PaneConfig[]>>(
                 (acc, chart) => {
                     acc[chart.chartId] = getInitialPaneData(
                         10,
@@ -73,16 +73,16 @@ export const createPaneSlice: StateCreator<
         });
     },
     clearPaneData: () => {
-        set((draft) => {
-            draft.paneByChartId = {};
+        set((state) => {
+            state.paneByChartId = {};
         });
     },
     addIndicatorOnPaneByActiveChartId: (registry) => {
         let isAdded = false;
-        set((draft) => {
-            const chartId = draft.activeChartId;
+        set((state) => {
+            const chartId = state.activeChartId;
             if (!chartId) return;
-            const chartPanes = draft.paneByChartId[chartId];
+            const chartPanes = state.paneByChartId[chartId];
             for (let i = 0; i < chartPanes.length; i++) {
                 if (
                     registry.metadata.overlay &&
@@ -108,12 +108,12 @@ export const createPaneSlice: StateCreator<
     },
     addIndicatorOnAllChartPanes: (registry) => {
         let isAdded = false;
-        set((draft) => {
-            const chartIds = draft.layout?.chartIds;
+        set((state) => {
+            const chartIds = state.layout?.chartIds;
             if (!chartIds || chartIds.length <= 0) return;
 
             for (const chartId of chartIds) {
-                const chartPanes = draft.paneByChartId[chartId];
+                const chartPanes = state.paneByChartId[chartId];
                 for (let i = 0; i < chartPanes.length; i++) {
                     if (
                         registry.metadata.overlay &&
@@ -140,10 +140,10 @@ export const createPaneSlice: StateCreator<
     },
     removeIndicatorFromPaneByActiveChartId: (registry) => {
         let isRemoved = false;
-        set((draft) => {
-            const chartId = draft.activeChartId;
+        set((state) => {
+            const chartId = state.activeChartId;
             if (!chartId) return;
-            const chartPanes = draft.paneByChartId[chartId];
+            const chartPanes = state.paneByChartId[chartId];
             for (let i = 0; i < chartPanes.length; i++) {
                 if (
                     registry.metadata.overlay &&
@@ -175,11 +175,11 @@ export const createPaneSlice: StateCreator<
     },
     removeIndicatorFromAllChartPanes: (registry) => {
         let isRemoved = false;
-        set((draft) => {
-            const chartIds = draft.layout?.chartIds;
+        set((state) => {
+            const chartIds = state.layout?.chartIds;
             if (!chartIds || chartIds.length <= 0) return;
             for (const chartId of chartIds) {
-                const chartPanes = draft.paneByChartId[chartId];
+                const chartPanes = state.paneByChartId[chartId];
                 for (let i = 0; i < chartPanes.length; i++) {
                     if (
                         registry.metadata.overlay &&
@@ -212,12 +212,12 @@ export const createPaneSlice: StateCreator<
     },
     removeAllIndicatorFromAllChartPanes: () => {
         let isRemoved = false;
-        set((draft) => {
-            const chartIds = draft.layout?.chartIds;
+        set((state) => {
+            const chartIds = state.layout?.chartIds;
             if (!chartIds || chartIds.length <= 0) return;
             isRemoved = true;
             for (const chartId of chartIds) {
-                const chartPanes = draft.paneByChartId[chartId];
+                const chartPanes = state.paneByChartId[chartId];
                 for (let i = 0; i < chartPanes.length; i++) {
                     if (
                         chartPanes[i].paneId === 'main' &&
